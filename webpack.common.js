@@ -13,8 +13,8 @@ const cssLoaders = (loader) => {
 
 module.exports = {
   entry: {
-    index: './src/pages/index/index.js',
-    blog: './src/pages/blog/blog.js',
+    index: ['@babel/polyfill', './src/pages/index/index.js'],
+    blog: ['@babel/polyfill', './src/pages/blog/blog.js'],
   },
   output: {
     filename: '[name].bundle.js',
