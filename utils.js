@@ -11,15 +11,17 @@ const cssLoaders = (loader) => {
   return loaders;
 };
 
-const generateHtmlWebpackPlugin = (page) => {
-  return new HtmlWebpackPlugin({
-    filename: `${page}.html`,
-    template: `./src/pages/${page}/${page}.pug`,
+const generateHtmlWebpackPlugins = (pages, pagesDir) => {
+  return pages.map((page) => {
+    const pageDir = page.replace(/\.pug/, '');
+    return new HtmlWebpackPlugin({
+      filename: `./${page.replace(/\.pug/, '.html')}`,
+      template: `${pagesDir}${pageDir}/${page}`,
+    });
   });
 };
 
 module.exports = {
   cssLoaders,
-  generateHtmlWebpackPlugin,
+  generateHtmlWebpackPlugins,
 };
-
