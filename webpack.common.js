@@ -1,20 +1,12 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
-const cssLoaders = (loader) => {
-  const loaders = [MiniCssExtractPlugin.loader, 'css-loader'];
-  if (loader) {
-    loaders.push(loader);
-  }
-  return loaders;
-};
+const { cssLoaders, generateHtmlWebpackPlugin } = require('./utils');
 
 module.exports = {
   entry: {
-    index: './src/pages/index/index.js',
-    blog: './src/pages/blog/blog.js',
+    index: ['@babel/polyfill', './src/pages/index/index.js'],
+    blog: ['@babel/polyfill', './src/pages/blog/blog.js'],
   },
   output: {
     filename: '[name].bundle.js',
@@ -22,16 +14,8 @@ module.exports = {
     clean: true,
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      chunks: ['index'],
-      template: './src/pages/index/index.pug',
-    }),
-    new HtmlWebpackPlugin({
-      filename: 'blog.html',
-      chunks: ['blog'],
-      template: './src/pages/blog/blog.pug',
-    }),
+    generateHtmlWebpackPlugin('index'),
+    generateHtmlWebpackPlugin('blog'),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: 'styles.css',
