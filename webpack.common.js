@@ -1,7 +1,21 @@
+const fs = require('fs');
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { cssLoaders, generateHtmlWebpackPlugin } = require('./utils');
+const {
+  cssLoaders,
+  generateHtmlWebpackPlugins,
+} = require('./utils');
+
+const pagesDir = './src/pages/';
+const pages = fs
+    .readdirSync(pagesDir)
+    .map((pageDir) => {
+      return fs.readdirSync(`${pagesDir}${pageDir}`)
+          .filter((fileName) => fileName.endsWith('.pug'));
+    })
+    .flat();
+const generatedHtmlForPages = generateHtmlWebpackPlugins(pages, pagesDir);
 
 module.exports = {
   entry: {
@@ -14,8 +28,7 @@ module.exports = {
     clean: true,
   },
   plugins: [
-    generateHtmlWebpackPlugin('index'),
-    generateHtmlWebpackPlugin('blog'),
+    ...generatedHtmlForPages,
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: 'styles.css',
